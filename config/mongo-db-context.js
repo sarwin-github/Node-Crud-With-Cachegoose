@@ -18,13 +18,6 @@ const mongoConnectionOnline = {
 // Session storage and database configuration 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module.exports.pickEnv = (env, app) => {
-
-	let options = {
-	  auth: {authdb: 'admin'},
-	  user: process.env.MongoDBLocalUser,
-	  pass: process.env.MongoDBLocalPassword,
-	}
-
 	mongoose.Promise = global.Promise;
 
 	switch (env) {
@@ -37,13 +30,18 @@ module.exports.pickEnv = (env, app) => {
 
 	        		//Set cachegoose
 	        		cachegoose(mongoose, {
-	        			engine : new MongoEngine(mongoConnectionOnline.url, { collection : 'cache-collection' }),
-	        			port   : 9001,      
-	        			host   : 'localhost'
+	        			engine : new MongoEngine(mongoConnectionOnline.url, { collection : 'cache-collection' })
 	        		});
 	        	}); 
 	        break;
 		case 'local':
+			// option for local
+			let options = {
+			  	auth: {authdb: 'admin'},
+			  	user: process.env.MongoDBLocalUser,
+			  	pass: process.env.MongoDBLocalPassword,
+			}
+
 	    	app.set('port', process.env.PORT || 9001);
 	        mongoose.connect(mongoConnectionLocal.url, options,  
 	        	err => { 
@@ -51,9 +49,7 @@ module.exports.pickEnv = (env, app) => {
 
 	        		//Set cachegoose
 	        		cachegoose(mongoose, {
-	        			engine : new MongoEngine(mongoConnectionLocal.url, { collection : 'cache-collection' }),
-	        			port   : 9001,      
-	        			host   : 'localhost'
+	        			engine : new MongoEngine('mongodb://127.0.0.1:27017/cache-database', { collection : 'cache-collection' })
 	        		});
 	        	});
 			break;

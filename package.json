@@ -2,12 +2,12 @@
   "name": "school-project",
   "version": "1.0.0",
   "description": "School Project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "index.js",
-    "dev": "nodemon --exec node -r dotenv/config index.js",
-    "start": "node -r dotenv/config index.js",
-    "debug": "node --debug index.js"
+    "test": "server.js",
+    "dev": "nodemon --exec node -r dotenv/config server.js",
+    "start": "node -r dotenv/config server.js",
+    "debug": "node --debug server.js"
   },
   "author": "",
   "license": "ISC",
