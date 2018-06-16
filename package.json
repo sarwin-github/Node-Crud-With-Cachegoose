@@ -1,7 +1,7 @@
 {
-  "name": "school-project",
+  "name": "address-api-with-cache",
   "version": "1.0.0",
-  "description": "School Project",
+  "description": "Address CRUD with Caching",
   "main": "server.js",
   "scripts": {
     "test": "server.js",
