@@ -1,10 +1,12 @@
 const session    = require('express-session');
 const mongoose   = require('mongoose');
 const mongoStore = require('connect-mongo')(session);
+const cachegoose     = require('cachegoose');
+const MongoEngine    = require('cacheman-mongo');
 
 // Local connection
 const mongoConnectionLocal = {	
-	'url': `mongodb://${process.env.MongoDBLocalUser}:${process.env.MongoDBLocalPassword}@127.0.0.1:27017/address-database`
+	'url': `mongodb://127.0.0.1:27017/address-database`
 };
 
 // Development database from mongolab
@@ -30,12 +32,30 @@ module.exports.pickEnv = (env, app) => {
 	    	app.set('port', process.env.PORT || 9001);
 
 	        mongoose.connect(mongoConnectionOnline.url, 
-	        	err => { if(err) { console.log(err); }}); 
+	        	err => { 
+	        		if(err) { console.log(err); }
+
+	        		//Set cachegoose
+	        		cachegoose(mongoose, {
+	        			engine : new MongoEngine(mongoConnectionOnline.url, { collection : 'cache-collection' }),
+	        			port   : 9001,      
+	        			host   : 'localhost'
+	        		});
+	        	}); 
 	        break;
 		case 'local':
 	    	app.set('port', process.env.PORT || 9001);
 	        mongoose.connect(mongoConnectionLocal.url, options,  
-	        	err => { if(err) { console.log(err); }});
+	        	err => { 
+	        		if(err) { console.log(err); }
+
+	        		//Set cachegoose
+	        		cachegoose(mongoose, {
+	        			engine : new MongoEngine(mongoConnectionLocal.url, { collection : 'cache-collection' }),
+	        			port   : 9001,      
+	        			host   : 'localhost'
+	        		});
+	        	});
 			break;
 	};
 

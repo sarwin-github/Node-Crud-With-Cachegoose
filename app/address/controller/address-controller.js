@@ -1,35 +1,14 @@
 const mongoose       = require('mongoose');
-
+const cachegoose     = require('cachegoose');
 const Address        = require('../model/address');
 const csrf           = require('csurf');
 const async          = require('async');
 const csrfProtection = csrf();
-/*
-const cachegoose     = require('cachegoose');
-const MongoEngine    = require('cacheman-mongo');
-
-const options = { 
-  port        : 27017,
-  host        : '127.0.0.1',
-  username    : process.env.MongoDBLocalUser,
-  password    : process.env.MongoDBLocalPassword,
-  database    : 'my-cache-db',
-  collection  : 'cache-collection',
-  compression : false
-};
-
-
-//Set cachegoose
-cachegoose(mongoose, {
-	engine : new MongoEngine(`mongodb://${process.env.MongoDBLocalUser}:${process.env.MongoDBLocalPassword}@127.0.0.1:27017/address-database`),
-	port   : 9001,      
-	host   : 'localhost'
-});*/
 
 // get the list of address
 module.exports.getListOfAddress = (req, res) => {
 	let query = Address.find({})
-				//.cache(0, 'MY-OWN-CACHE-KEY')
+				.cache(0, 'address-list-cache')
 				.select({'__v': 0, 'dateCreated': 0});
 
 	query.exec((err, address) => {
@@ -74,7 +53,7 @@ module.exports.postCreateAddress = (req, res) => {
 		    return res.status(500).json({success: false, message: 'Something went wrong.'});
 		}
 
-		//cachegoose.clearCache('MY-OWN-CACHE-KEY');
+		cachegoose.clearCache('address-list-cache');
 
 		req.flash('message', 'Successfully added a new address.');
 		res.redirect('/api/address/list');
