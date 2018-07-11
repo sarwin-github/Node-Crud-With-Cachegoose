@@ -157,7 +157,7 @@ module.exports.getAddressDetails = (req, res) => {
 };
 
 
-// get the form for editing a address
+// get the form for deleting a address
 module.exports.getDeleteAddress = (req, res) => {
 	let query = Address.findById({ _id: req.params.id }).select({'__v': 0});
 
